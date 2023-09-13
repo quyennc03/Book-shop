@@ -7,6 +7,7 @@ import routerOrder from './routes/Order';
 import routerCart from './routes/Cart';
 import routerOrderDetail from './routes/OrderDetail';
 import routerVoucher from './routes/Voucher';
+import routerUserVoucher from './routes/UserVoucher';
 const app = express();
 
 
@@ -19,6 +20,7 @@ app.use("/api", routerOrder)
 app.use("/api", routerCart)
 app.use("/api", routerOrderDetail)
 app.use("/api", routerVoucher)
+app.use("/api", routerUserVoucher)
 
 mongoose.connect("mongodb://127.0.0.1:27017/book-shop")
 export const viteNodeApp = app

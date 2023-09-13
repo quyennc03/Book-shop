@@ -35,10 +35,12 @@ const productSchema = new mongoose.Schema({
         ref: "Category",
         required: true
     },
-    voucherId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Voucher"
-    },
+    vouchers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Voucher"
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now,

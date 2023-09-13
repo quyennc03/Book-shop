@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    userVouchers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "UserVoucher"
+        }
+    ],
     role: {
         type: String,
         default: "member"

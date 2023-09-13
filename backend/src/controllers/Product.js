@@ -89,7 +89,7 @@ export const getAll = async (req, res) => {
 }
 export const getOne = async (req, res) => {
     try {
-        const product = await Product.findById({ _id: req.params.id }).populate("categoryId", "voucherId")
+        const product = await Product.findById({ _id: req.params.id }).populate("categoryId", "vouchers")
         if (!product) {
             return res.status(404).json({
                 message: "Product not found"
