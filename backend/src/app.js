@@ -8,9 +8,10 @@ import routerCart from './routes/Cart';
 import routerOrderDetail from './routes/OrderDetail';
 import routerVoucher from './routes/Voucher';
 import routerUserVoucher from './routes/UserVoucher';
+import cors from "cors"
 const app = express();
-
-
+// const cloudinary = required("./cloudinary/cloudinary.js")
+app.use(cors())
 app.use(express.json())
 
 app.use("/api", routerProduct)

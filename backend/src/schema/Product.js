@@ -32,13 +32,17 @@ export const productSchema = joi.object({
         "string.empty": "image khong duoc bo trong",
         "any.required": "Truong image bat buoc nhap"
     }),
-    thumbnail: joi.array().items
-        (
-            joi.string().required()
-        ).required().messages({
-            "string.empty": "thumbnail khong duoc bo trong",
-            "any.required": "Truong thumbnail bat buoc nhap"
-        }),
+    thumbnail: joi.string().required().messages({
+        "string.empty": "thumbnail khong duoc bo trong",
+        "any.required": "Truong thumbnail bat buoc nhap"
+    }),
+    // thumbnail: joi.array().items
+    //     (
+    //         joi.string().required()
+    //     ).required().messages({
+    //         "string.empty": "thumbnail khong duoc bo trong",
+    //         "any.required": "Truong thumbnail bat buoc nhap"
+    //     }),
     categoryId: joi.string().required().messages({
         "string.empty": "categoryId khong duoc bo trong",
         "any.required": "Truong categoryId bat buoc nhap"

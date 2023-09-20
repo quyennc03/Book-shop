@@ -33,10 +33,7 @@ export const getOne = async (req, res) => {
                 message: "Category not found"
             })
         }
-        return res.status(200).json({
-            message: "found category",
-            category
-        });
+        return res.status(200).json(category);
     } catch (error) {
         console.log(error);
     }
@@ -49,10 +46,8 @@ export const getAll = async (req, res) => {
                 message: "Category not found"
             })
         }
-        return res.status(200).json({
-            message: "found categories",
-            category
-        });
+        return res.status(200).json(
+            category);
     } catch (error) {
         console.log(error);
     }

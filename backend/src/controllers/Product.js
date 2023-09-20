@@ -72,17 +72,34 @@ export const remove = async (req, res) => {
     }
 }
 export const getAll = async (req, res) => {
+    const {
+        _page = 1,
+        _litmit = 100,
+        _sort = "createAt",
+        _order = "desc",
+        _search
+    } = req.query
+    const searchQuery = {};
+    if (_search) {
+        searchQuery.name = { $regex: _search, $options: "i" };
+    }
+    const options = {
+        page: _page,
+        litmit: _litmit,
+        sort: {
+            [_sort]: _order === "desc" ? "-1" : "1"
+        }
+    }
     try {
-        const product = await Product.find()
-        if (!product) {
+        const { docs: products } = await Product.paginate(searchQuery, options)
+        if (!products) {
             return res.status(404).json({
                 message: "Product not found"
             })
         }
-        return res.status(200).json({
-            message: "Product found",
-            product,
-        });
+        return res.status(200).json(
+            products,
+        );
     } catch (error) {
         console.log(error);
     }
@@ -95,10 +112,9 @@ export const getOne = async (req, res) => {
                 message: "Product not found"
             })
         }
-        return res.status(200).json({
-            message: "Product found",
+        return res.status(200).json(
             product,
-        });
+        );
     } catch (error) {
         console.log(error);
     }
