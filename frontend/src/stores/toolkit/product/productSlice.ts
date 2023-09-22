@@ -33,17 +33,21 @@ const productCategorySlice = createSlice({
     name: "products",
     initialState: initialProductCategory,
     reducers: ({
-        listProductCategorySlice: (state: IProductCategory, action: PayloadAction<IProductCategory>) => {
+        listProductCateSlice: (state: IProductState, action: PayloadAction<IProduct[]>) => {
+            const categoryIndex = action.payload[0].categoryId
+            const listProductFilter = action.payload.filter((product) => product.categoryId == categoryIndex)
+            state.products = listProductFilter
+        },
+        listProductFilter: (state: IProductCategory, action: PayloadAction<IProductCategory>) => {
             const productCategory = action.payload.categoryTerm.trim()
             const listProductCategory = action.payload.products.filter((product) => product.categoryId && product.categoryId.includes(productCategory))
-            console.log(listProductCategory);
 
             state.products = listProductCategory
         }
     })
 })
 
-export const { listProductCategorySlice } = productCategorySlice.actions
+export const { listProductFilter, listProductCateSlice } = productCategorySlice.actions
 
 export const { listProductSlice, removeProductSlice, listProductSaleSlice } = productSlice.actions
 export const productCategoryReducer = productCategorySlice.reducer

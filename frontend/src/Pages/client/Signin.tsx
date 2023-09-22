@@ -1,11 +1,65 @@
 import React, { useEffect } from 'react'
+import { useForm } from "react-hook-form"
+import { signinForm, signinSchema, signupForm, signupSchema } from '../../Schemas/auth/Auth'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useGetListUserQuery, useSigninMutation, useSingupMutation } from '../../stores/toolkit/auth/auth.service'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { useNavigate } from 'react-router-dom'
 const Signin = () => {
+    const navigate = useNavigate()
+    const [onAdd] = useSingupMutation()
+    const [onAddSignin] = useSigninMutation()
+    const { data: listUser } = useGetListUserQuery()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<signupForm>({
+        resolver: yupResolver(signupSchema)
+    })
+    const {
+        register: registerSignin,
+        handleSubmit: handleSubmitSignin,
+        formState: { errors: errorSingin }
+    } = useForm<signinForm>({
+        resolver: yupResolver(signinSchema)
+    })
+    const [user, setUser] = useLocalStorage("user", null);
+    const onSignin = async (users: signinForm) => {
+        try {
+            const errorEmail = listUser?.find((userItem) => userItem.email == users.email)
+            if (!errorEmail) {
+                alert("Tai khoan hoac mat khau khong chinh xac")
+            } else {
+                const { data } = await onAddSignin(users)
+                const { accessToken, user } = data
+                setUser({ accessToken, ...user })
+                navigate("/")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const onSignup = async (user: signupForm) => {
+        try {
+            await onAdd(user)
+            alert("Đăng kí thành công!")
+            const formSignup = document.querySelector(".formSignup");
+            const formSignin = document.querySelector(".formSignin")
+            const buttonSignup = document.querySelector(".buttonSignup")
+            const buttonSignin = document.querySelector(".buttonSignin")
+            formSignin?.classList.remove("hidden")
+            formSignup?.classList.add("hidden")
+            buttonSignup?.classList.remove("border-b-2")
+            buttonSignin?.classList.add("border-b-2")
+        } catch (error) {
+            console.log(error);
+        }
+    }
     useEffect(() => {
         const formSignup = document.querySelector(".formSignup");
         const formSignin = document.querySelector(".formSignin")
         const buttonSignup = document.querySelector(".buttonSignup")
-        console.log(buttonSignup);
-
         const buttonSignin = document.querySelector(".buttonSignin")
         buttonSignup?.addEventListener("click", () => {
             formSignup?.classList.remove("hidden")
@@ -33,14 +87,17 @@ const Signin = () => {
                             {/* <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Đăng nhập
                             </h1> */}
-                            <form className="space-y-4 md:space-y-6 formSignin" action="#">
+                            <form onSubmit={handleSubmitSignin(onSignin)} className="space-y-4 md:space-y-6 formSignin" action="#">
                                 <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                    <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
+                                    <input {...registerSignin("email")} type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhap email ..." />
+                                    <p className='text-red-600 italic'>{errorSingin ? errorSingin.email?.message : ""}</p>
+
                                 </div>
                                 <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                                    <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    <input {...registerSignin("password")} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    <p className='text-red-600 italic'>{errorSingin ? errorSingin.password?.message : ""}</p>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     {/* <div className="flex items-start">
@@ -55,24 +112,28 @@ const Signin = () => {
                                 </div>
                                 <button type="submit" className="w-full text-white font-bold bg-main hover:bg-main-700 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
                             </form>
-                            <form className="space-y-4 md:space-y-6 hidden formSignup" action="#">
+                            <form onSubmit={handleSubmit(onSignup)} className="space-y-4 md:space-y-6 hidden formSignup" action="#">
                                 <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                                    <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tên của bạn" />
+                                    <input {...register("fullName")} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tên của bạn" />
+                                    <p className='text-red-600 italic'>{errors ? errors.fullName?.message : ""}</p>
                                 </div>
                                 <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                    <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
+                                    <input {...register("email")} type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
                                 </div>
+                                <p className='text-red-600 italic'>{errors ? errors.email?.message : ""}</p>
                                 <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                                    <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    <input  {...register("password")} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                                 </div>
+                                <p className='text-red-600 italic'>{errors ? errors.password?.message : ""}</p>
                                 <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm Password</label>
-                                    <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    <input {...register("confirmPassword")} type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                                 </div>
-                                <button type="submit" className="w-full text-white bg-main font-bold  hover:bg-main-700 focus:ring-4 focus:outline-none focus:ring-primary-300  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign up</button>
+                                <p className='text-red-600 italic'>{errors ? errors.confirmPassword?.message : ""}</p>
+                                <button type='submit' className="w-full text-white bg-main font-bold  hover:bg-main-700 focus:ring-4 focus:outline-none focus:ring-primary-300  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign up</button>
                             </form>
                         </div>
                     </div>

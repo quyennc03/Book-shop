@@ -20,7 +20,7 @@ function App() {
       <Route path="/" element={<LayoutClient></LayoutClient>}>
         <Route index element={<HomePage></HomePage>}></Route>
         <Route path="/all-category" element={<AllCategory></AllCategory>}></Route>
-        <Route path="/productDetail" element={<ProductDetail></ProductDetail>}></Route>
+        <Route path="/productDetail/:id" element={<ProductDetail></ProductDetail>}></Route>
         <Route path="/signin" element={<Signin></Signin>}></Route>
         <Route path="/cart" element={<Cart></Cart>}></Route>
         <Route path="/checkout" element={<Checkout></Checkout>}></Route>

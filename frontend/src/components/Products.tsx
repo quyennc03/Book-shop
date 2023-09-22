@@ -7,18 +7,29 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../stores/toolkit'
 import { listCategorySlice } from '../stores/toolkit/category/categorySlice'
 import { useFetchListProductQuery } from '../stores/toolkit/product/product.service'
-import { listProductCategorySlice } from '../stores/toolkit/product/productSlice'
+import { listProductCateSlice, listProductFilter } from '../stores/toolkit/product/productSlice'
+import { Link } from 'react-router-dom'
 const Products = () => {
+
     const dispatch: Dispatch<any> = useDispatch()
     const { data: listCategory, isSuccess: isSuccessCategory, isLoading } = useFetchListCategoryQuery()
     const { data: listProduct, isSuccess } = useFetchListProductQuery()
+    const [listProductCate, setListProductCate] = useState<string>(listProduct ? listProduct[0].categoryId : "")
     const categoryState = useSelector((state: RootState) => state.categorySlice.categories)
     const productState = useSelector((state: RootState) => state.productCategorySlice.products)
     useEffect(() => {
         if (isSuccessCategory) {
             dispatch(listCategorySlice(listCategory))
         }
+        if (isSuccess) {
+            dispatch(listProductCateSlice(listProduct))
+        }
     }, [isSuccessCategory, isSuccess])
+    const handleCategory = (id: string) => {
+        if (id && listProduct) {
+            dispatch(listProductFilter({ categoryTerm: id, products: listProduct }))
+        }
+    }
     useEffect(() => {
         const category = document.querySelectorAll(".category")
         category.forEach((cate) => {
@@ -28,11 +39,6 @@ const Products = () => {
             })
         });
     }, [])
-    const handleCategory = (id: string) => {
-        if (id && listProduct) {
-            dispatch(listProductCategorySlice({ categoryTerm: id, products: listProduct }))
-        }
-    }
     return (
         <div className='container'>
             <div className="mt-3">
@@ -52,8 +58,8 @@ const Products = () => {
                         <div className="text-[16px] category px-4 border border-1 cursor-pointer py-2 ml-3">Tình cảm</div> */}
                     </div>
                     <div className="grid grid-cols-5 max-h-[732px] overflow-hidden px-10 py-4 gap-5 min-h-[380px]">
-                        {productState?.map((product, index) => {
-                            return <div className='relative group hover:shadow-lg' key={index}>
+                        {productState.map((product, index) => {
+                            return <Link to={`/productDetail/${product._id}`} className='relative group hover:shadow-lg' key={index}>
                                 <div className="h-[230px] overflow-hidden">
                                     <img className='w-full h-full object-cover group-hover:scale-110 transition-all ease-linear' src={product.image} alt="" />
                                 </div>
@@ -68,10 +74,10 @@ const Products = () => {
                                 <div className="absolute top-2 left-2 rounded-[50%] py-2 px-2 font bg-main">
                                     <p className='text-white'>{product.price < product.discount ? (product.discount - product.price) / product.discount * 100 : 0}%</p>
                                 </div>
-                            </div>
+                            </Link>
                         })}
                     </div>
-                    <button className='my-4 border boder-1 border-main text-main text-center ml-[50%] translate-x-[-50%] px-10 py-2 text-[16px] hover:bg-main hover:text-white transition-all ease-linear'>Xem thêm</button>
+                    <button className='my-4 border boder-1 border-main text-main text-center ml-[50%] translate-x-[-50%] px-10 py-2 text-[16px] hover:bg-main hover:text-white transition-all ease-linear'><Link to="/all-category">Xem thêm</Link></button>
                 </div>
             </div>
         </div>

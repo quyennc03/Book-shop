@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AsideAdmin from '../../AsideAdmin'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 const LayoutAdmin = () => {
+    const navigate = useNavigate()
+    const getUser = JSON.parse(localStorage.getItem("user")!)
+    useEffect(() => {
+        if (!getUser || getUser.role !== "admin") {
+            setTimeout(() => {
+                alert("Bạn không có quyền admin!")
+            }, 1)
+            return navigate("/")
+        }
+    }, [navigate])
     return (
         <div>
             <AsideAdmin></AsideAdmin>

@@ -30,3 +30,90 @@ export const create = async (req, res) => {
         });
     }
 };
+// export const update = async (req, res) => {
+//     try {
+//         const { error } = cartSchema.validate(req.body);
+//         if (error) {
+//             res.json({
+//                 message: error.details[0].message,
+//             });
+//         }
+//         const cart = await Cart.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
+//         if (!cart) {
+//             return res.status(404).json({
+//                 message: "Order not found",
+//             });
+//         }
+//         await User.findByIdAndUpdate(cart.userId, {
+//             $addToSet: {
+//                 carts: cart._id,
+//             },
+//         });
+//         return res.status(200).json({
+//             message: "cart updated successfully",
+//             cart,
+//         });
+//     } catch (error) {
+//         return res.status(500).json({
+//             message: error,
+//         });
+//     }
+// };
+export const remove = async (req, res) => {
+    try {
+        const cart = await Cart.findByIdAndDelete({ _id: req.params.id });
+        if (!cart) {
+            return res.status(404).json({
+                message: "Order not found",
+            });
+        }
+        await User.findByIdAndUpdate(cart.userId, {
+            $addToSet: {
+                carts: cart._id,
+            },
+        });
+        return res.status(200).json({
+            message: "cart removed successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+};
+export const getAll = async (req, res) => {
+    try {
+        const cart = await Cart.find();
+        if (!cart) {
+            return res.status(404).json({
+                message: "Order not found",
+            });
+        }
+        return res.status(200).json({
+            message: "find all",
+            cart,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+};
+export const getById = async (req, res) => {
+    try {
+        const cart = await Cart.findById({ _id: req.params.id });
+        if (!cart) {
+            return res.status(404).json({
+                message: "Order not found",
+            });
+        }
+        return res.status(200).json({
+            message: "find one cart",
+            cart,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+};

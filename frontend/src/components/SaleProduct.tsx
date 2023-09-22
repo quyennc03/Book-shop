@@ -38,7 +38,7 @@ const SaleProduct = () => {
                     >
                         {productState?.map((product, index) => {
                             return <SwiperSlide className='relative group hover:shadow-lg' key={index}>
-                                <Link to="/productDetail">
+                                <Link to={`/productDetail/${product._id}`}>
                                     <div className="h-[200px] overflow-hidden">
                                         <img className='w-full h-full object-cover group-hover:scale-110 transition-all ease-linear' src={product.image} alt="" />
                                     </div>
