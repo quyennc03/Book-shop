@@ -10,7 +10,15 @@ const orderApi = createApi({
     tagTypes: ["order"],
     endpoints: (builer) => ({
         fetchListOrder: builer.query<IOrder[], IOrder>({
-            query: () => "",
+            query: () => "/orders",
+            providesTags: ["order"]
+        }),
+        fetchOneOrder: builer.query({
+            query: (id) => "/orders/" + id,
+            providesTags: ["order"]
+        }),
+        fetchAllUserOrder: builer.query({
+            query: (id) => "/user_orders/" + id,
             providesTags: ["order"]
         }),
         addOrder: builer.mutation<formOrder[], formOrder>({

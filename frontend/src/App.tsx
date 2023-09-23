@@ -14,6 +14,7 @@ import AddCategory from "./Pages/admin/category/AddCategory";
 import UpdateCategory from "./Pages/admin/category/UpdateCategory";
 import AddProduct from "./Pages/admin/product/AddProduct";
 import UpdateProduct from "./Pages/admin/product/UpdateProduct";
+import MyOrder from "./Pages/client/MyOrder";
 function App() {
   return (
     <Routes>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/signin" element={<Signin></Signin>}></Route>
         <Route path="/cart" element={<Cart></Cart>}></Route>
         <Route path="/checkout" element={<Checkout></Checkout>}></Route>
+        <Route path="/myOrder" element={<MyOrder></MyOrder>}></Route>
       </Route>
       <Route path="/admin" element={<LayoutAdmin></LayoutAdmin>}>
         <Route index element={<ListProduct></ListProduct>}></Route>

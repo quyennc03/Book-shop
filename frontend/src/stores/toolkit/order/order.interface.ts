@@ -1,11 +1,11 @@
 export interface IOrder {
     _id?: string
-    userId: string
+    userId?: string
     fullName: string
     email: string
     phoneNumber: string
     address: string
-    vouchers: voucherArr[]
+    vouchers?: voucherArr[]
     note: string
     status: number
     totalMoney: number

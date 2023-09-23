@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { RootState } from '../../stores/toolkit'
 import { Dispatch } from 'redux'
 import { useFetchListCartQuery } from '../../stores/toolkit/cart/cart.service'
@@ -10,7 +10,9 @@ import { useFetchListProductQuery } from '../../stores/toolkit/product/product.s
 import { listProductSlice } from '../../stores/toolkit/product/productSlice'
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { formOrder } from '../../Schemas/order/order'
+import { formOrder, orderSchema } from '../../Schemas/order/order'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useAddOrderMutation } from '../../stores/toolkit/order/order.service'
 const Checkout = () => {
     const dispatch: Dispatch<any> = useDispatch()
     const cartState = useSelector((state: RootState) => state.cartSlice.carts)
@@ -18,6 +20,8 @@ const Checkout = () => {
     const [total, setTotal] = useState<number>(0)
     const [totalOrder, setTotalOrder] = useState<number>(0)
     const { data: listCart, isSuccess } = useFetchListCartQuery()
+    const [addOrder] = useAddOrderMutation()
+    const navigate = useNavigate()
     // tong tien cart 
     useEffect(() => {
         let countTotal = 0
@@ -39,19 +43,35 @@ const Checkout = () => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors }
-    } = useForm<formOrder>()
+    } = useForm<formOrder>({
+        resolver: yupResolver(orderSchema)
+    })
+    const userStore = JSON.parse(localStorage.getItem("user")!)
     const onAdd = async (order: formOrder) => {
         try {
-            console.log(order);
-
+            if (userStore) {
+                await addOrder(order)
+                navigate("/myOrder")
+            }
         } catch (error) {
             console.log(error);
         }
     }
+    useEffect(() => {
+        if (userStore) {
+            setValue("email", userStore?.email)
+            setValue("fullName", userStore.fullName)
+            setValue("totalMoney", totalOrder)
+            setValue("userId", userStore?._id)
+            setValue("status", 1)
+        }
+    }, [setValue, userStore])
     return (
         <div className='container'>
             <form onSubmit={handleSubmit(onAdd)} className="flex gap-[28px]">
+                <></>
                 <div className="">
                     <Link
                         to="/"
@@ -71,12 +91,12 @@ const Checkout = () => {
                                 <div className="mb-3">
                                     <input
                                         {...register("email")}
-                                        type="email"
+                                        type="text"
                                         id="email"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Email"
-                                        required
                                     />
+                                    <p className='text-red-600 italic'>{errors ? errors.email?.message : ""}</p>
                                 </div>
                                 <div className="mb-3">
                                     <input
@@ -84,9 +104,9 @@ const Checkout = () => {
                                         id="fullName"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Họ và tên"
-                                        required
                                         {...register("fullName")}
                                     />
+                                    <p className='text-red-600 italic'>{errors ? errors.fullName?.message : ""}</p>
                                 </div>
                                 <div className="mb-3">
                                     <input
@@ -94,9 +114,9 @@ const Checkout = () => {
                                         id="phoneNumber"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Số điện thoại"
-                                        required
                                         {...register("phoneNumber")}
                                     />
+                                    <p className='text-red-600 italic'>{errors ? errors.phoneNumber?.message : ""}</p>
                                 </div>
                                 <div className="mb-3">
                                     <input
@@ -104,9 +124,9 @@ const Checkout = () => {
                                         id="address"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Địa chỉ"
-                                        required
                                         {...register("address")}
                                     />
+                                    <p className='text-red-600 italic'>{errors ? errors.address?.message : ""}</p>
 
                                 </div>
                                 <div className="mb-3">
@@ -117,6 +137,8 @@ const Checkout = () => {
                                         placeholder="Ghi chú ..."
                                         {...register("note")}
                                     ></textarea>
+                                    <p className='text-red-600 italic'>{errors ? errors.note?.message : ""}</p>
+
                                 </div>
                             </div>
                         </div>
@@ -209,10 +231,10 @@ const Checkout = () => {
                                     d="M15.75 19.5L8.25 12l7.5-7.5"
                                 />
                             </svg>
-                            <span>Quay về giỏ hàng</span>
+                            <span><Link to={"/cart"}>Quay về giỏ hàng</Link></span>
                         </Link>
                         <button className=" bg-main text-white uppercase bg-primary px-4 py-3 rounded-lg min-w-[120px]">
-                            Đặt hàng
+                            Đặt hàng
                         </button>
                     </div>
                 </div>
