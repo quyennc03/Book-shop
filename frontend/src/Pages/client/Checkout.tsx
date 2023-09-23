@@ -1,15 +1,63 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link } from "react-router-dom"
+import { RootState } from '../../stores/toolkit'
+import { Dispatch } from 'redux'
+import { useFetchListCartQuery } from '../../stores/toolkit/cart/cart.service'
+import { listCartSlice } from '../../stores/toolkit/cart/cartSlice'
+import { useFetchListProductQuery } from '../../stores/toolkit/product/product.service'
+import { listProductSlice } from '../../stores/toolkit/product/productSlice'
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { formOrder } from '../../Schemas/order/order'
 const Checkout = () => {
+    const dispatch: Dispatch<any> = useDispatch()
+    const cartState = useSelector((state: RootState) => state.cartSlice.carts)
+    const { data: listProduct, isSuccess: isSuccessProduct } = useFetchListProductQuery()
+    const [total, setTotal] = useState<number>(0)
+    const [totalOrder, setTotalOrder] = useState<number>(0)
+    const { data: listCart, isSuccess } = useFetchListCartQuery()
+    // tong tien cart 
+    useEffect(() => {
+        let countTotal = 0
+        cartState.map((cart) => {
+            countTotal += cart.price * cart.quantity
+        })
+        setTotal(countTotal)
+        setTotalOrder(countTotal + 40000)
+    }, [cartState])
+    useEffect(() => {
+        if (isSuccess && listCart) {
+            dispatch(listCartSlice(listCart))
+        }
+        if (isSuccessProduct) {
+            dispatch(listProductSlice(listProduct))
+        }
+    }, [isSuccess, isSuccessProduct])
+    // order
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<formOrder>()
+    const onAdd = async (order: formOrder) => {
+        try {
+            console.log(order);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <div className='container'>
-            <form className="flex gap-[28px]">
+            <form onSubmit={handleSubmit(onAdd)} className="flex gap-[28px]">
                 <div className="">
                     <Link
                         to="/"
                         className="text-3xl block text-primary font-semibold mb-5 mt-5"
                     >
-                        Tea House
+                        FunnyBook
                     </Link>
                     <div className="flex gap-[28px]">
                         <div>
@@ -22,6 +70,7 @@ const Checkout = () => {
                             <div>
                                 <div className="mb-3">
                                     <input
+                                        {...register("email")}
                                         type="email"
                                         id="email"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
@@ -36,6 +85,7 @@ const Checkout = () => {
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Họ và tên"
                                         required
+                                        {...register("fullName")}
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -45,6 +95,7 @@ const Checkout = () => {
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Số điện thoại"
                                         required
+                                        {...register("phoneNumber")}
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -54,6 +105,7 @@ const Checkout = () => {
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
                                         placeholder="Địa chỉ"
                                         required
+                                        {...register("address")}
                                     />
 
                                 </div>
@@ -63,6 +115,7 @@ const Checkout = () => {
                                         rows={4}
                                         className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary focus:border-primary"
                                         placeholder="Ghi chú ..."
+                                        {...register("note")}
                                     ></textarea>
                                 </div>
                             </div>
@@ -90,21 +143,29 @@ const Checkout = () => {
                     </div>
                 </div>
                 <div className="border-l-[1px] py-5 pl-5 w-[410px]">
-                    <h1 className="text-xl font-bold mb-5">Đơn hàng 1 sản phẩm</h1>
-                    <div className="pt-7 border-t-[1px] border-b-[1px] pb-2">
-                        <div className="mb-4 flex justify-between items-center">
-                            <div className="flex gap-3 items-center">
-                                <div className="border rounded-lg relative w-[55px] h-[55px]">
-                                    <img src="../../public/images/sanpham1.jpg" className="w-[50px] h-[50px] rounded-lg" />
-                                    <p className="w-5 h-5 bg-main absolute top-[-5px] right-[-5px] flex justify-center items-center text-sm text-white font-semibold rounded-full">
-                                        1
-                                    </p>
-                                </div>
-                                <h3 className="font-bold">Boku no hero</h3>
-                            </div>
-                            <p className="font-medium">12345₫</p>
+                    <h1 className="text-xl font-bold mb-5">Đơn hàng {cartState.length} sản phẩm</h1>
+                    {cartState?.map((cart, index) => {
+                        return <div key={index}>
+                            {listProduct?.map((product, index) =>
+                                product._id == cart.productId ?
+                                    <div key={index} className="pt-7 border-t-[1px] border-b-[1px] pb-2">
+                                        <div className="mb-4 flex justify-between items-center">
+                                            <div className="flex gap-3 items-center">
+                                                <div className="border rounded-lg relative w-[55px] h-[55px]">
+                                                    <img src={product.image} className="w-[50px] h-[50px] rounded-lg" />
+                                                    <p className="w-5 h-5 bg-main absolute top-[-5px] right-[-5px] flex justify-center items-center text-sm text-white font-semibold rounded-full">
+                                                        {cart.quantity}
+                                                    </p>
+                                                </div>
+                                                <h3 className="font-bold">{product.name}</h3>
+                                            </div>
+                                            <p className="font-medium">{product.price}</p>
+                                        </div>
+                                    </div> : ""
+                            )}
                         </div>
-                    </div>
+                    })}
+
                     <div className="py-5 flex gap-3 border-b-[1px]">
                         <input
                             type="text"
@@ -118,7 +179,7 @@ const Checkout = () => {
                     <div className="pt-7 pb-5 border-b-[1px]">
                         <div className="flex justify-between mb-4">
                             <span>Tạm tính:</span>
-                            <span className="font-medium">179.000 <sup>đ</sup></span>
+                            <span className="font-medium">{total} <sup>đ</sup></span>
                         </div>
                         <div className="flex justify-between">
                             <span>Phí vận chuyển:</span>
@@ -127,7 +188,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex justify-between mb-4 items-center pt-5">
                         <span className="text-lg font-semibold">Tổng cộng:</span>
-                        <span className="text-primary text-2xl font-bold">170.000 <sup>đ</sup></span>
+                        <span className="text-primary text-2xl font-bold">{totalOrder + 40000} <sup>đ</sup></span>
                     </div>
                     <div className="flex justify-between">
                         <Link

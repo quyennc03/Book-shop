@@ -8,11 +8,15 @@ const cartApi = createApi({
     }),
     tagTypes: ["cart"],
     endpoints: (builer) => ({
-        fetchListCart: builer.query({
+        fetchListCart: builer.query<ICart[], void>({
             query: () => `/carts`,
             providesTags: ["cart"]
         }),
-        addCart: builer.mutation<ICart[], ICart>({
+        fetchCartByUser: builer.query<ICart[], void>({
+            query: (id) => `/getByUser/${id}`,
+            providesTags: ["cart"]
+        }),
+        addCart: builer.mutation({
             query: (cart) => ({
                 method: "POST",
                 url: "/carts",
@@ -38,6 +42,6 @@ const cartApi = createApi({
 })
 
 
-export const { useAddCartMutation, useRemoveCartMutation, useFetchListCartQuery, useFetchOneCartQuery } = cartApi
+export const { useAddCartMutation, useRemoveCartMutation, useFetchListCartQuery, useFetchOneCartQuery, useFetchCartByUserQuery } = cartApi
 
 export default cartApi

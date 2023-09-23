@@ -7,6 +7,8 @@ import authApi from './auth/auth.service'
 import authSlice from './auth/authSlice'
 import cartSlice from './cart/cartSlice'
 import cartApi from './cart/cart.service'
+import orderApi from './order/order.service'
+import orderSlice from './order/orderSlice'
 
 
 export const store = configureStore({
@@ -15,14 +17,16 @@ export const store = configureStore({
         [categoryAPI.reducerPath]: categoryAPI.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [cartApi.reducerPath]: cartApi.reducer,
+        [orderApi.reducerPath]: orderApi.reducer,
         productSlice: productSlice,
         productCategorySlice: productCategoryReducer,
         categorySlice: categorySlice,
         AuthSlice: authSlice,
-        cartSlice: cartSlice
+        cartSlice: cartSlice,
+        orderSlice: orderSlice
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(productAPI.middleware).concat(categoryAPI.middleware).concat(authApi.middleware).concat(cartApi.middleware),
+        getDefaultMiddleware().concat(productAPI.middleware).concat(categoryAPI.middleware).concat(authApi.middleware).concat(cartApi.middleware).concat(orderApi.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

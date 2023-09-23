@@ -6,6 +6,5 @@ export const cartSchema = joi.object(
         productId: joi.string().required(),
         price: joi.number().required(),
         quantity: joi.number().required(),
-        totalMoney: joi.number().required(),
     }
 )

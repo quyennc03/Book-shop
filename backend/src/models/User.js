@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
             ref: "UserVoucher"
         }
     ],
+    carts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Cart"
+        }
+    ],
     role: {
         type: String,
         default: "member"

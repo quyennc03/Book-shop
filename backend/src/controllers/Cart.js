@@ -89,10 +89,9 @@ export const getAll = async (req, res) => {
                 message: "Order not found",
             });
         }
-        return res.status(200).json({
-            message: "find all",
+        return res.status(200).json(
             cart,
-        });
+        );
     } catch (error) {
         return res.status(500).json({
             message: error,
@@ -107,13 +106,31 @@ export const getById = async (req, res) => {
                 message: "Order not found",
             });
         }
-        return res.status(200).json({
-            message: "find one cart",
+        return res.status(200).json(
             cart,
-        });
+        );
     } catch (error) {
         return res.status(500).json({
             message: error,
         });
     }
 };
+export const getByUser = async (req, res) => {
+    try {
+        const user = await User.findById({ _id: req.params.id });
+        if (!user) {
+            return res.status(404).json({
+                message: "user not found",
+            });
+        }
+        const carts = await Cart.find({ userId: user._id })
+        return res.status(200).json(
+            carts,
+        );
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+};
+

@@ -1,11 +1,81 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom"
+import { useFetchCartByUserQuery, useFetchListCartQuery, useRemoveCartMutation } from '../../stores/toolkit/cart/cart.service'
+import { Dispatch } from 'redux'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../stores/toolkit'
+import { deleteCartSlice, listCartSlice } from '../../stores/toolkit/cart/cartSlice'
+import { useFetchListProductQuery, useFetchOneProductQuery } from '../../stores/toolkit/product/product.service'
+import { listProductSlice } from '../../stores/toolkit/product/productSlice'
+import { ICart } from '../../stores/toolkit/cart/cart.interface'
 const Cart = () => {
+    const dispatch: Dispatch<any> = useDispatch()
+    const cartState = useSelector((state: RootState) => state.cartSlice.carts)
+
+    const { data: listCart, isSuccess } = useFetchListCartQuery()
+    const productState = useSelector((state: RootState) => state.productSlice.products)
+    const { data: listProduct, isSuccess: isSuccessProduct } = useFetchListProductQuery()
+    const [onRemove] = useRemoveCartMutation()
+    const [carts, setCarts] = useState<ICart[]>([])
+    const [totalMoney, setTotalMoney] = useState<number>(0)
+    const user = JSON.parse(localStorage.getItem("user")!)
+    // const handleCartInfo = () => {
+    //     const cartTerm: ICart[] = []
+    //     let count = 0
+    //     for (const cart of cartState) {
+    //         const product = productState?.find((product) => product._id == cart.productId)
+    //         if (product && user) {
+    //             cartTerm.push({
+    //                 productId: product._id,
+    //                 userId: user?._id,
+    //                 price: product?.price * cart?.quantity,
+    //                 quantity: cart?.quantity,
+    //                 totalMoney: count += product?.price * cart?.quantity
+    //             })
+    //         }
+    //     }
+    //     dispatch(listCartSlice(cartTerm))
+    // }
+
+    useEffect(() => {
+        if (isSuccess && listCart) {
+            dispatch(listCartSlice(listCart))
+        }
+        if (isSuccessProduct) {
+            dispatch(listProductSlice(listProduct))
+        }
+    }, [isSuccess, isSuccessProduct])
+
+    // useEffect(() => {
+    //     handleCartInfo()
+    // }, [cartState])
+    const removeCart = async (id: string) => {
+        try {
+            if (id) {
+                const isConfirm = window.confirm("Ban co chac chan muon xoa khong?");
+                if (isConfirm) {
+                    await onRemove(id).then(() => dispatch(deleteCartSlice(id)))
+                    alert("Xoa thanh cong!")
+                }
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+    useEffect(() => {
+        let total = 0
+        cartState.map((cart) => {
+            total += cart.price * cart.quantity
+        })
+        setTotalMoney(total)
+    }, [cartState])
     return (
         <div className='container'>
             <h1 className="uppercase mt-11 text-lg">Giỏ hàng của bạn</h1>
             <div className="bg-white flex justify-between px-2 py-3 rounded-lg font-bold">
-                <p className='font-bold'>(2 Sản phẩm)</p>
+                <p className='font-bold'>({cartState.length} Sản phẩm)</p>
                 <div></div>
                 <div className=""></div>
                 <div className=""></div>
@@ -15,59 +85,71 @@ const Cart = () => {
             </div>
             <div className="my-3 bg-white px-3 py-1 rounded-lg flex flex-col">
                 <form className='flex flex-col'>
-                    <div className="px-3 py-5 flex justify-between items-center border-gray-200">
-                        <Link to={`/productDetail`}>
-                            <img src="../../public/images/sanpham1.jpg" className="w-[98px] h-[98px]" />
-                        </Link>
-                        <div>
-                            <h2 className="mb-2 text-[16px]">Thay Đổi Cuộc Sống Với Nhân Số Học</h2>
-                            <p className="text-primary font-bold text-[14px]">173.600 <sup>đ</sup> <del className='ml-2 font-normal text-[12px] text-[#888888]'>248.000 <sup>đ</sup></del></p>
-                        </div>
-                        <div className="flex items-center ml-3">
-                            <button
-                                type="button"
-                                className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l"
-                            >
-                                -
-                            </button>
-                            <input
-                                type="number"
-                                className="px-3 py-1 bg-white border-t border-b border-gray-200 w-[50px] appearance-none text-center border-none"
-                                value={2}
-                            />
-                            <button
-                                type="button"
-                                className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r"
-                            >
-                                +
-                            </button>
-                        </div>
-                        {/* thanh tien */}
-                        <div>
-                            <p className="text-primary font-bold text-main">173.600 <sup>đ</sup></p>
-                        </div>
-                        <button type="button">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="4"
-                                stroke="currentColor"
-                                className="w-5 h-5 text-gray-500"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                    </div>
+                    {cartState?.length > 0 && cartState?.map((cart, index) => {
+                        return <>
+                            {listProduct?.map((product, index) =>
+                                product._id == cart.productId ?
+                                    <>
+                                        <div key={index} className="px-3 py-5 flex justify-between items-center border-gray-200">
+                                            <Link to={`/productDetail`}>
+                                                <img src={product.image} className="w-[98px] h-[98px] shrink-0" />
+                                            </Link>
+                                            <div className='w-[350px]'>
+                                                <h2 className="mb-2 text-[16px]">{product.name}</h2>
+                                                <p className="text-primary font-bold text-[14px]">{product.price}<sup>đ</sup> <del className='ml-2 font-normal text-[12px] text-[#888888]'>{product.discount}<sup>đ</sup></del></p>
+                                            </div>
+                                            <div className="flex items-center ml-3">
+                                                <button
+                                                    type="button"
+                                                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l"
+                                                >
+                                                    -
+                                                </button>
+                                                <input
+                                                    type="number"
+                                                    className="px-3 py-1 bg-white border-t border-b border-gray-200 w-[50px] appearance-none text-center border-none"
+                                                    value={cart.quantity}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                            {/* thanh tien */}
+                                            <div>
+                                                <p className="text-primary font-bold text-main">{product.price * cart.quantity} <sup>đ</sup></p>
+                                            </div>
+                                            <button onClick={() => removeCart(cart._id)} type="button">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth="4"
+                                                    stroke="currentColor"
+                                                    className="w-5 h-5 text-gray-500"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </> : ""
+                            )}
+
+                        </>
+                    })}
+
                     <div className="items-baseline  py-4 flex-1 text-right border-t-2">
                         <span className="text-[16px] mr-3">Tổng tiền:</span>
-                        <span className="text-main text-[20px] font-bold float-right">173.600đ</span>
+                        <span className="text-main text-[20px] font-bold float-right">{totalMoney}đ</span>
                     </div>
                 </form>
+                {/* button */}
                 <div className="flex-1 ml-auto my-8">
                     <div className="flex items-center">
                         <Link
