@@ -17,7 +17,7 @@ const cartSlice = createSlice({
                 const cartByUser = action?.payload?.filter((cart) => cart.userId == userLocal._id)
                 state.carts = cartByUser
             } else {
-                state.carts = action.payload
+                state.carts = []
             }
 
         },

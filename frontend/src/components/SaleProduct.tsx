@@ -45,13 +45,13 @@ const SaleProduct = () => {
                                     <div className="p-3 flex flex-col justify-between h-[110px]">
                                         <h1 className='text-[14px] line-clamp-2 '>{product.name}</h1>
                                         <div className="flex text-[16px] font-semibold py-2">
-                                            <span className='text-red-600'>{product.price}<sup>đ</sup></span>
-                                            <span className='text-[14px] font-normal  text-[#888888] ml-2'><del>{product.discount}</del> <sup>đ</sup></span>
+                                            <span className='text-red-600'>{product.price.toLocaleString("vi-VN")}<sup>đ</sup></span>
+                                            <span className='text-[14px] font-normal text-[#888888] ml-2'><del>{product.discount.toLocaleString("vi-VN")}</del> <sup>đ</sup></span>
                                         </div>
                                         <div className="rounded-lg font-bold">0 đã bán</div>
                                     </div>
                                     <div className="absolute top-2 left-2 rounded-[50%] py-2 px-2 font bg-main">
-                                        <p className='text-white'>{product.price < product.discount ? (product.discount - product.price) / product.discount * 100 : 0}%</p>
+                                        <p className='text-white'>{product.price < product.discount ? ((product?.discount - product?.price) / product?.discount * 100).toFixed(0) : 0}%</p>
                                     </div>
                                 </Link>
                             </SwiperSlide>

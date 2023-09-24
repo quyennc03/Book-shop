@@ -9,6 +9,7 @@ import routerOrderDetail from './routes/OrderDetail';
 import routerVoucher from './routes/Voucher';
 import routerUserVoucher from './routes/UserVoucher';
 import cors from "cors"
+import routerFeedBack from './routes/FeedBack';
 const app = express();
 // const cloudinary = required("./cloudinary/cloudinary.js")
 app.use(cors())
@@ -22,6 +23,7 @@ app.use("/api", routerCart)
 app.use("/api", routerOrderDetail)
 app.use("/api", routerVoucher)
 app.use("/api", routerUserVoucher)
+app.use("/api", routerFeedBack)
 
 mongoose.connect("mongodb://127.0.0.1:27017/book-shop")
 export const viteNodeApp = app

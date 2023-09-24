@@ -11,7 +11,10 @@ const orderDetailSlice = createSlice({
     reducers: ({
         fetchListOrderDetailSlice: (state: IOrderDetailState, action: PayloadAction<IOrderDetail[]>) => {
             state.orderDetails = action.payload
-        }
+        },
+        fetchListProductHot: (state: IOrderDetailState, action: PayloadAction<IOrderDetail[]>) => {
+            state.orderDetails = action.payload
+        },
     })
 })
 

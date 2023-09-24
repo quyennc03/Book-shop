@@ -84,3 +84,16 @@ export const getAll = async (req, res) => {
         console.log(error);
     }
 }
+export const getOneUser = async (req, res) => {
+    try {
+        const user = await User.findById({ _id: req.params.id })
+        if (!user) {
+            return res.status(404).json({
+                messages: 'Khong co tai khoan nao'
+            })
+        }
+        return res.status(200).json(user)
+    } catch (error) {
+        console.log(error);
+    }
+}

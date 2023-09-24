@@ -1,8 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import 'swiper/css/navigation';
+import { useFetchAllOrderDetailQuery } from '../stores/toolkit/orderDetail/orderDetail.service';
+import { Dispatch } from 'redux';
+import { useDispatch } from 'react-redux';
+import { fetchListOrderDetailSlice } from '../stores/toolkit/orderDetail/orderDetailSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../stores/toolkit';
+import { useFetchListProductQuery, useFetchOneProductQuery } from '../stores/toolkit/product/product.service';
+import { listProductSlice } from '../stores/toolkit/product/productSlice';
+import { IProduct } from '../stores/toolkit/product/product.interface';
 const OutStandingBook = () => {
+    const dispatch: Dispatch<any> = useDispatch()
+    const { data: listOrderDetail, isSuccess: isSuccessOrderDetail } = useFetchAllOrderDetailQuery()
+    const { data: listProduct, isSuccess: isSucessProduct } = useFetchListProductQuery()
+    const orderDetailState = useSelector((state: RootState) => state.orderDetailSlice.orderDetails)
+    const productState = useSelector((state: RootState) => state.productSlice.products)
+    // useEffect(() => {
+    //     orderDetailState.map((orderDetail): any => {
+    //         productState.filter((product) => product._id === orderDetail._id)
+    //     })
+    // }, [orderDetailState, productState])
+    useEffect(() => {
+        if (isSuccessOrderDetail) {
+            dispatch(fetchListOrderDetailSlice(listOrderDetail))
+        }
+        if (isSucessProduct) {
+            dispatch(listProductSlice(listProduct))
+        }
+    }, [isSuccessOrderDetail, isSucessProduct])
     return (
         <div className='container bg-white'>
             <div className="mt-3">

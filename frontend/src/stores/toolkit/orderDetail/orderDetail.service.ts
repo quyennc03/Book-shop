@@ -14,6 +14,10 @@ const orderDetailApi = createApi({
             query: (id) => "/orderDetail/" + id,
             providesTags: ["orderDetail"]
         }),
+        fetchAllOrderDetail: builer.query<IOrderDetail[], void>({
+            query: () => "/orderDetail",
+            providesTags: ["orderDetail"]
+        }),
         addOrderDetail: builer.mutation<IOrderDetail[], IOrderDetail>({
             query: (orderDetail) => ({
                 url: "/orderDetail",
@@ -25,6 +29,6 @@ const orderDetailApi = createApi({
     })
 })
 
-export const { useFetchOneOrderDetailQuery, useAddOrderDetailMutation } = orderDetailApi
+export const { useFetchOneOrderDetailQuery, useAddOrderDetailMutation, useFetchAllOrderDetailQuery } = orderDetailApi
 
 export default orderDetailApi

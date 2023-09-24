@@ -68,71 +68,77 @@ const Cart = () => {
                 <div className=""></div>
             </div>
             <div className="my-3 bg-white px-3 py-1 rounded-lg flex flex-col">
-                <form className='flex flex-col'>
-                    {cartState ? cartState?.map((cart, index) => {
-                        return <>
-                            {listProduct?.map((product, index) =>
-                                product._id == cart.productId ?
-                                    <>
-                                        <div key={index} className="px-3 py-5 flex justify-between items-center border-gray-200">
-                                            <Link to={`/productDetail`}>
-                                                <img src={product.image} className="w-[98px] h-[98px] shrink-0" />
-                                            </Link>
-                                            <div className='w-[350px]'>
-                                                <h2 className="mb-2 text-[16px]">{product.name}</h2>
-                                                <p className="text-primary font-bold text-[14px]">{product.price}<sup>đ</sup> <del className='ml-2 font-normal text-[12px] text-[#888888]'>{product.discount}<sup>đ</sup></del></p>
-                                            </div>
-                                            <div className="flex items-center ml-3">
-                                                <button
-                                                    type="button"
-                                                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l"
-                                                >
-                                                    -
-                                                </button>
-                                                <input
-                                                    type="number"
-                                                    className="px-3 py-1 bg-white border-t border-b border-gray-200 w-[50px] appearance-none text-center border-none"
-                                                    value={cart.quantity}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r"
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                            {/* thanh tien */}
-                                            <div>
-                                                <p className="text-primary font-bold text-main">{product.price * cart.quantity} <sup>đ</sup></p>
-                                            </div>
-                                            <button onClick={() => removeCart(cart._id!)} type="button">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth="4"
-                                                    stroke="currentColor"
-                                                    className="w-5 h-5 text-gray-500"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </> : ""
-                            )}
-
-                        </>
-                    }) : ""}
-
-                    <div className="items-baseline  py-4 flex-1 text-right border-t-2">
-                        <span className="text-[16px] mr-3">Tổng tiền:</span>
-                        <span className="text-main text-[20px] font-bold float-right">{totalMoney}đ</span>
+                {cartState?.length == 0 ?
+                    <div className='flex items-center justify-center min-h-[250px]'>
+                        <h1 className='text-[18px]'>Hiện không có đơn hàng nào</h1>
                     </div>
-                </form>
+                    : <form className='flex flex-col'>
+                        {cartState ? cartState?.map((cart, index) => {
+                            return <>
+                                {listProduct?.map((product, index) =>
+                                    product._id == cart.productId ?
+                                        <>
+                                            <div key={index} className="px-3 py-5 flex justify-between items-center border-gray-200">
+                                                <Link to={`/productDetail`}>
+                                                    <img src={product.image} className="w-[98px] h-[98px] shrink-0" />
+                                                </Link>
+                                                <div className='w-[350px]'>
+                                                    <h2 className="mb-2 text-[16px]">{product.name}</h2>
+                                                    <p className="text-primary font-bold text-[14px]">{product.price}<sup>đ</sup> <del className='ml-2 font-normal text-[12px] text-[#888888]'>{product.discount}<sup>đ</sup></del></p>
+                                                </div>
+                                                <div className="flex items-center ml-3">
+                                                    <button
+                                                        type="button"
+                                                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l"
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <input
+                                                        type="number"
+                                                        className="px-3 py-1 bg-white border-t border-b border-gray-200 w-[50px] appearance-none text-center border-none"
+                                                        value={cart.quantity}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r"
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                                {/* thanh tien */}
+                                                <div>
+                                                    <p className="text-primary font-bold text-main">{product.price * cart.quantity} <sup>đ</sup></p>
+                                                </div>
+                                                <button onClick={() => removeCart(cart._id!)} type="button">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        strokeWidth="4"
+                                                        stroke="currentColor"
+                                                        className="w-5 h-5 text-gray-500"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            d="M6 18L18 6M6 6l12 12"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </> : ""
+                                )}
+
+                            </>
+                        }) : ""}
+
+                        <div className="items-baseline  py-4 flex-1 text-right border-t-2">
+                            <span className="text-[16px] mr-3">Tổng tiền:</span>
+                            <span className="text-main text-[20px] font-bold float-right">{totalMoney}đ</span>
+                        </div>
+                    </form>
+                }
+
                 {/* button */}
                 <div className="flex-1 ml-auto my-8">
                     <div className="flex items-center">

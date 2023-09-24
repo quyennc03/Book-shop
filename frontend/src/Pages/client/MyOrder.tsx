@@ -12,7 +12,6 @@ const MyOrder = () => {
     const { data: listOrderUser, isSuccess: isSuccessOrder } = useFetchAllUserOrderQuery(userStore?._id)
     const orderState = useSelector((state: RootState) => state.orderSlice.orders)
     const [onUpdateOrder] = useUpdateOrderMutation()
-    console.log(orderState);
 
     useEffect(() => {
         if (isSuccessOrder) {
@@ -121,14 +120,14 @@ const MyOrder = () => {
                                         onClick={() => update(order._id)}
                                         className="w-full buttonStatus mx-5 px-5 py-3 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                     >
-                                        Đang giao hàng
+                                        {OrderStatus(order.status)}
                                     </button>}
                                     {order.status != 3 && <button
                                         type="button"
                                         disabled={order.status != 3}
                                         className="w-full buttonStatus mx-5 px-5 py-3 text-sm font-medium text-center text-white bg-red-700 rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                     >
-                                        Đã nhận được hàng
+                                        {OrderStatus(order.status)}
                                     </button>}
 
 

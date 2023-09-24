@@ -60,3 +60,20 @@ export const getById = async (req, res) => {
         });
     }
 };
+export const getAll = async (req, res) => {
+    try {
+        const orderDetail = await OrderDetail.find();
+        if (!orderDetail) {
+            return res.status(404).json({
+                message: "OrderDefault not found",
+            });
+        }
+        return res.status(200).json(
+            orderDetail
+        )
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+};

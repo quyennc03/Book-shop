@@ -22,3 +22,8 @@ export interface IProductCategory {
     categoryTerm: string
     products: IProduct[]
 }
+
+export interface IProductSearch {
+    searchTerm: string
+    products: IProduct[]
+}

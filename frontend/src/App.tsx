@@ -16,7 +16,7 @@ import AddProduct from "./Pages/admin/product/AddProduct";
 import UpdateProduct from "./Pages/admin/product/UpdateProduct";
 import MyOrder from "./Pages/client/MyOrder";
 import Billconfirm from "./Pages/client/Billconfirm";
-import ListOrder from "./Pages/admin/order/listOrder";
+import ListOrder from "./Pages/admin/order/ListOrder";
 import UpdateOrder from "./Pages/admin/order/UpdateOrder";
 function App() {
   return (

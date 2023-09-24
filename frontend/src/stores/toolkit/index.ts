@@ -11,6 +11,8 @@ import orderApi from './order/order.service'
 import orderSlice from './order/orderSlice'
 import orderDetailApi from './orderDetail/orderDetail.service'
 import orderDetailSlice from './orderDetail/orderDetailSlice'
+import feedBackSlice from './feedBack/feedBackSlice'
+import feedBackApi from './feedBack/feedBack.service'
 
 
 export const store = configureStore({
@@ -21,16 +23,18 @@ export const store = configureStore({
         [cartApi.reducerPath]: cartApi.reducer,
         [orderApi.reducerPath]: orderApi.reducer,
         [orderDetailApi.reducerPath]: orderDetailApi.reducer,
+        [feedBackApi.reducerPath]: feedBackApi.reducer,
         productSlice: productSlice,
         productCategorySlice: productCategoryReducer,
         categorySlice: categorySlice,
         AuthSlice: authSlice,
         cartSlice: cartSlice,
         orderSlice: orderSlice,
-        orderDetailSlice: orderDetailSlice
+        orderDetailSlice: orderDetailSlice,
+        feedBackSlice: feedBackSlice
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(productAPI.middleware).concat(categoryAPI.middleware).concat(authApi.middleware).concat(cartApi.middleware).concat(orderApi.middleware).concat(orderDetailApi.middleware),
+        getDefaultMiddleware().concat(productAPI.middleware).concat(categoryAPI.middleware).concat(authApi.middleware).concat(cartApi.middleware).concat(orderApi.middleware).concat(orderDetailApi.middleware).concat(feedBackApi.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

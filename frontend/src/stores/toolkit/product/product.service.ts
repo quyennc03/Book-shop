@@ -10,6 +10,10 @@ export const productApi = createApi({
             query: () => `/products`,
             providesTags: ["product"]
         }),
+        getProductByName: builer.query({
+            query: (name) => `/products?_search=${name}`,
+            providesTags: ["product"]
+        }),
         fetchOneProduct: builer.query({
             query: (id) => `/products/` + id,
             providesTags: ["product"]
@@ -40,5 +44,5 @@ export const productApi = createApi({
     })
 })
 
-export const { useFetchListProductQuery, useAddProductMutation, useUpdateProductMutation, useRemoveProductMutation, useFetchOneProductQuery } = productApi
+export const { useFetchListProductQuery, useAddProductMutation, useUpdateProductMutation, useRemoveProductMutation, useFetchOneProductQuery, useGetProductByNameQuery } = productApi
 export default productApi
