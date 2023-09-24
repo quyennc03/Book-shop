@@ -39,10 +39,9 @@ export const getAll = async (req, res) => {
                 message: "Order not found",
             });
         }
-        return res.status(200).json({
-            message: "Orders found",
-            data: order,
-        });
+        return res.status(200).json(
+            order
+        );
     } catch (error) {
         return res.status(500).json({
             message: error,
@@ -64,10 +63,9 @@ export const getByUser = async (req, res) => {
         //         message: "Khong co don hang nao",
         //     });
         // }
-        return res.status(200).json({
-            message: "Orders found",
-            orders,
-        });
+        return res.status(200).json(
+            orders
+        );
     } catch (error) {
         return res.status(500).json({
             message: error,
@@ -82,10 +80,9 @@ export const getById = async (req, res) => {
                 message: "order not found",
             });
         }
-        return res.status(200).json({
-            message: "order found",
+        return res.status(200).json(
             order,
-        });
+        );
     } catch (error) {
         return res.status(500).json({
             message: error,

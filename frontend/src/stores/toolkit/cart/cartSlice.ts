@@ -19,7 +19,6 @@ const cartSlice = createSlice({
             } else {
                 state.carts = action.payload
             }
-            console.log(state.carts);
 
         },
         addCartSlice: (state: ICartState, action: PayloadAction<ICart>) => {
@@ -40,6 +39,8 @@ const cartSlice = createSlice({
                 ];
             }
             localStorage.setItem("cart", JSON.stringify(state.carts))
+            const local = JSON.parse(localStorage.getItem("cart")!)
+            console.log(local);
         },
         deleteCartSlice: (state: ICartState, action: PayloadAction<string>) => {
             state.carts = state.carts.filter((cart) => cart._id != action.payload)

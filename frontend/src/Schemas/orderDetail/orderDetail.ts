@@ -5,7 +5,6 @@ export const orderDetailSchema = yup.object({
     productId: yup.string().required(),
     price: yup.number().required(),
     quantity: yup.number().required(),
-    totalMoney: yup.number().required()
 })
 
 export type formOrderDetail = yup.InferType<typeof orderDetailSchema>

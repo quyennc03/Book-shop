@@ -4,7 +4,6 @@ export interface IOrderDetail {
     productId: string
     price: number
     quantity: number
-    totalMoney: number
 }
 
 export interface IOrderDetailState {

@@ -19,10 +19,7 @@ const orderDetailSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    totalMoney: {
-        type: Number,
-        required: true
-    },
+
 })
 
 export default mongoose.model("OrderDetail", orderDetailSchema)

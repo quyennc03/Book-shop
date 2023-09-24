@@ -12,6 +12,7 @@ import { ICart } from '../../stores/toolkit/cart/cart.interface'
 const Cart = () => {
     const dispatch: Dispatch<any> = useDispatch()
     const cartState = useSelector((state: RootState) => state.cartSlice.carts)
+    console.log(cartState);
 
     const { data: listCart, isSuccess } = useFetchListCartQuery()
     const productState = useSelector((state: RootState) => state.productSlice.products)
@@ -20,28 +21,11 @@ const Cart = () => {
     const [carts, setCarts] = useState<ICart[]>([])
     const [totalMoney, setTotalMoney] = useState<number>(0)
     const user = JSON.parse(localStorage.getItem("user")!)
-    // const handleCartInfo = () => {
-    //     const cartTerm: ICart[] = []
-    //     let count = 0
-    //     for (const cart of cartState) {
-    //         const product = productState?.find((product) => product._id == cart.productId)
-    //         if (product && user) {
-    //             cartTerm.push({
-    //                 productId: product._id,
-    //                 userId: user?._id,
-    //                 price: product?.price * cart?.quantity,
-    //                 quantity: cart?.quantity,
-    //                 totalMoney: count += product?.price * cart?.quantity
-    //             })
-    //         }
-    //     }
-    //     dispatch(listCartSlice(cartTerm))
-    // }
-
     useEffect(() => {
         if (isSuccess && listCart) {
             dispatch(listCartSlice(listCart))
         }
+
         if (isSuccessProduct) {
             dispatch(listProductSlice(listProduct))
         }
@@ -75,7 +59,7 @@ const Cart = () => {
         <div className='container'>
             <h1 className="uppercase mt-11 text-lg">Giỏ hàng của bạn</h1>
             <div className="bg-white flex justify-between px-2 py-3 rounded-lg font-bold">
-                <p className='font-bold'>({cartState.length} Sản phẩm)</p>
+                <p className='font-bold'>({cartState?.length} Sản phẩm)</p>
                 <div></div>
                 <div className=""></div>
                 <div className=""></div>
@@ -85,7 +69,7 @@ const Cart = () => {
             </div>
             <div className="my-3 bg-white px-3 py-1 rounded-lg flex flex-col">
                 <form className='flex flex-col'>
-                    {cartState?.length > 0 && cartState?.map((cart, index) => {
+                    {cartState ? cartState?.map((cart, index) => {
                         return <>
                             {listProduct?.map((product, index) =>
                                 product._id == cart.productId ?
@@ -121,7 +105,7 @@ const Cart = () => {
                                             <div>
                                                 <p className="text-primary font-bold text-main">{product.price * cart.quantity} <sup>đ</sup></p>
                                             </div>
-                                            <button onClick={() => removeCart(cart._id)} type="button">
+                                            <button onClick={() => removeCart(cart._id!)} type="button">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     fill="none"
@@ -142,7 +126,7 @@ const Cart = () => {
                             )}
 
                         </>
-                    })}
+                    }) : ""}
 
                     <div className="items-baseline  py-4 flex-1 text-right border-t-2">
                         <span className="text-[16px] mr-3">Tổng tiền:</span>

@@ -53,7 +53,8 @@ const Checkout = () => {
         try {
             if (userStore) {
                 await addOrder(order)
-                navigate("/myOrder")
+                alert("Đặt hàng thành công!")
+                navigate("/billConfirm")
             }
         } catch (error) {
             console.log(error);

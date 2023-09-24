@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { formOrder } from "../../../Schemas/order/order"
 import { IOrderDetail } from "./orderDetail.interface"
+import { formOrderDetail } from "../../../Schemas/orderDetail/orderDetail"
 
 const orderDetailApi = createApi({
-    reducerPath: "orders",
+    reducerPath: "orderDetails",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8080/api"
     }),
@@ -13,7 +14,7 @@ const orderDetailApi = createApi({
             query: (id) => "/orderDetail/" + id,
             providesTags: ["orderDetail"]
         }),
-        addOrderDetail: builer.mutation<formOrder[], formOrder>({
+        addOrderDetail: builer.mutation<IOrderDetail[], IOrderDetail>({
             query: (orderDetail) => ({
                 url: "/orderDetail",
                 method: "POST",

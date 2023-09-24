@@ -9,7 +9,7 @@ const orderApi = createApi({
     }),
     tagTypes: ["order"],
     endpoints: (builer) => ({
-        fetchListOrder: builer.query<IOrder[], IOrder>({
+        fetchListOrder: builer.query<IOrder[], void>({
             query: () => "/orders",
             providesTags: ["order"]
         }),
@@ -29,9 +29,9 @@ const orderApi = createApi({
             }),
             invalidatesTags: ["order"]
         }),
-        updateOrder: builer.mutation<IOrder[], IOrder>({
-            query: ({ _id, ...order }) => ({
-                url: "/orders/" + _id,
+        updateOrder: builer.mutation({
+            query: ({ id, order }) => ({
+                url: "/orders/" + id,
                 method: "PATCH",
                 body: order
             }),
@@ -40,6 +40,6 @@ const orderApi = createApi({
     })
 })
 
-export const { useFetchListOrderQuery, useAddOrderMutation, useUpdateOrderMutation } = orderApi
+export const { useFetchListOrderQuery, useAddOrderMutation, useUpdateOrderMutation, useFetchAllUserOrderQuery, useFetchOneOrderQuery } = orderApi
 
 export default orderApi

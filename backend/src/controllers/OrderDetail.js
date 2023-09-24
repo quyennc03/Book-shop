@@ -45,16 +45,15 @@ export const getById = async (req, res) => {
         //         message: "Khong tim thay order",
         //     });
         // }
-        const orderDetail = await OrderDetail.findById({ _id: req.params.id });
+        const orderDetail = await OrderDetail.find({ orderId: req.params.id }).populate("productId");
         if (!orderDetail) {
             return res.status(404).json({
                 message: "OrderDefault not found",
             });
         }
-        return res.status(200).json({
-            message: "Order found",
-            orderDetail,
-        });
+        return res.status(200).json(
+            orderDetail
+        )
     } catch (error) {
         return res.status(500).json({
             message: error,

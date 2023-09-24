@@ -5,5 +5,4 @@ export const orderDetailSchema = joi.object({
     productId: joi.string().required(),
     price: joi.number().required().min(0),
     quantity: joi.number().required().min(0),
-    totalMoney: joi.number().required().min(0),
 })
