@@ -39,6 +39,11 @@ const Products = () => {
             })
         });
     }, [])
+    const allProduct = () => {
+        if (listProduct) {
+            dispatch(listProductFilter({ categoryTerm: "", products: listProduct }))
+        }
+    }
     return (
         <div className='container'>
             <div className="mt-3">
@@ -50,6 +55,7 @@ const Products = () => {
                 </div>
                 <div className="bg-white overflow-hidden">
                     <div className="flex px-4 py-3 border-b-2">
+                        <button onClick={allProduct} className='text-[16px] ml-3 category px-4 border border-1 cursor-pointer py-2 active'>Tất cả</button>
                         {categoryState.map((cate, index) => {
                             return <div onClick={() => handleCategory(cate._id!)} key={index} className="text-[16px] ml-3 category px-4 border border-1 cursor-pointer py-2 active">{cate.name}</div>
                         })}

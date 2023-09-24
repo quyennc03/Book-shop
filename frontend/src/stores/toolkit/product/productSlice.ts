@@ -30,9 +30,7 @@ const productCategorySlice = createSlice({
             state.products = action.payload
         },
         listProductCateSlice: (state: IProductState, action: PayloadAction<IProduct[]>) => {
-            const categoryIndex = action.payload[0].categoryId
-            const listProductFilter = action.payload.filter((product) => product.categoryId == categoryIndex)
-            state.products = listProductFilter
+            state.products = action.payload
         },
         listProductFilter: (state: IProductCategory, action: PayloadAction<IProductCategory>) => {
             const productCategory = action.payload.categoryTerm.trim()

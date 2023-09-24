@@ -18,6 +18,7 @@ import MyOrder from "./Pages/client/MyOrder";
 import Billconfirm from "./Pages/client/Billconfirm";
 import ListOrder from "./Pages/admin/order/ListOrder";
 import UpdateOrder from "./Pages/admin/order/UpdateOrder";
+import AllProductSale from "./Pages/client/AllProductSale";
 function App() {
   return (
     <Routes>
@@ -30,6 +31,7 @@ function App() {
         <Route path="/checkout" element={<Checkout></Checkout>}></Route>
         <Route path="/myOrder" element={<MyOrder></MyOrder>}></Route>
         <Route path="/BillConfirm" element={<Billconfirm></Billconfirm>}></Route>
+        <Route path="/all-sale" element={<AllProductSale></AllProductSale>}></Route>
       </Route>
       <Route path="/admin" element={<LayoutAdmin></LayoutAdmin>}>
         <Route index element={<ListProduct></ListProduct>}></Route>

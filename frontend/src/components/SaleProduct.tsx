@@ -57,7 +57,7 @@ const SaleProduct = () => {
                             </SwiperSlide>
                         })}
                     </Swiper>
-                    <button className='my-4 border boder-1 border-main text-main text-center ml-[50%] translate-x-[-50%] px-10 py-2 text-[16px] hover:bg-main hover:text-white transition-all ease-linear'>Xem thêm</button>
+                    <button className='my-4 border boder-1 border-main text-main text-center ml-[50%] translate-x-[-50%] px-10 py-2 text-[16px] hover:bg-main hover:text-white transition-all ease-linear'><Link to="/all-sale">Xem thêm</Link></button>
                 </div>
 
             </div >

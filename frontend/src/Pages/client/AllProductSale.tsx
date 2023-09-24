@@ -9,7 +9,7 @@ import { useFetchListProductQuery } from '../../stores/toolkit/product/product.s
 import { RootState } from '../../stores/toolkit'
 import { listCategorySlice } from '../../stores/toolkit/category/categorySlice'
 import { listProductCateSlice, listProductFilter, listProductSearchSlice } from '../../stores/toolkit/product/productSlice'
-const AllCategory = () => {
+const AllProductSale = () => {
 
     const dispatch: Dispatch<any> = useDispatch()
     const { data: listCategory, isSuccess: isSuccessCategory, isLoading } = useFetchListCategoryQuery()
@@ -25,7 +25,8 @@ const AllCategory = () => {
         }
 
         if (isSuccess) {
-            dispatch(listProductCateSlice(listProduct))
+            const listProductFilterSale = listProduct.filter((product) => product.discount !== 0)
+            dispatch(listProductCateSlice(listProductFilterSale))
         }
     }, [isSuccessCategory, isSuccess])
     useEffect(() => {
@@ -56,11 +57,9 @@ const AllCategory = () => {
     return (
         <div className='container'>
             <div className="mt-3">
-                <div className="bg-white flex px-4 py-3 items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                    </svg>
-                    <h1 className='font-bold uppercase text-lg ml-3'>Danh mục sản phẩm</h1>
+                <div className="bg-[#FCDAB0] flex px-4 py-3 items-center">
+                    <img className='w-[30px] h-[30px]' src="../../public/images/sale.png" alt="" />
+                    <h1 className='font-bold uppercase text-lg ml-3'>Sản phẩm đang giảm giá</h1>
 
                 </div>
                 <div className="bg-white overflow-hidden">
@@ -69,9 +68,6 @@ const AllCategory = () => {
                         {categoryState.map((cate, index) => {
                             return <div onClick={() => handleCategory(cate._id!)} key={index} className="text-[16px] ml-3 category px-4 border border-1 cursor-pointer py-2 active">{cate.name}</div>
                         })}
-                        {/* <div className="text-[16px] category px-4 border border-1 cursor-pointer py-2 ml-3">Hoạt hình</div>
-                        <div className="text-[16px] category px-4 border border-1 cursor-pointer py-2 ml-3">Thiếu Nhi</div>
-                        <div className="text-[16px] category px-4 border border-1 cursor-pointer py-2 ml-3">Tình cảm</div> */}
                     </div>
                     <p className='text-center text-[18px] my-3'> {nameStore ? <p>Kết quả tìm kiếm của bạn là:{nameStore}</p> : ""}</p>
                     <div className="grid grid-cols-5 px-10 py-4 gap-5 min-h-[380px]">
@@ -102,4 +98,4 @@ const AllCategory = () => {
     )
 }
 
-export default AllCategory
+export default AllProductSale
