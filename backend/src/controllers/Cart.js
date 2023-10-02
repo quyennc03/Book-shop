@@ -115,6 +115,23 @@ export const getById = async (req, res) => {
         });
     }
 };
+export const update = async (req, res) => {
+    try {
+        const cart = await Cart.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
+        if (!cart) {
+            return res.status(404).json({
+                message: "Order not found",
+            });
+        }
+        return res.status(200).json(
+            cart,
+        );
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+};
 export const getByUser = async (req, res) => {
     try {
         const user = await User.findById({ _id: req.params.id });

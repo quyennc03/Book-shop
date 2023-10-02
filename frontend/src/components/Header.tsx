@@ -76,7 +76,7 @@ const Header = () => {
                     <div className="absolute px-1 bottom-[-5px] z-10 bg-red-500 rounded-[50%] right-0 text-white">{cartState?.length}</div>
                 </Link>
                 {getUser ? <Link to="/">
-                    <div className='relative group'>Hello! {getUser.fullName}
+                    <div className='relative group z-10'>Hello! {getUser.fullName}
                         <ul className='bg-[#F1F1F1] border border-1 text-black absolute min-w-[150px] hidden group-hover:block shadow-2xl shadow-[#ccc]'>
                             <li onClick={() => handleLogout()} className='px-2 py-3  hover:border-b-2 hover:border-main transition-all ease-linear'><p className=' transition-all ease-linear hover:ml-1 hover:text-main'>Đăng xuất</p></li>
                             <li className='px-2 py-3  hover:border-b-2 hover:border-main transition-all ease-linear'><Link to={"/myOrder"} className=' transition-all ease-linear hover:ml-1 hover:text-main'>Đơn hàng của tôi</Link></li>

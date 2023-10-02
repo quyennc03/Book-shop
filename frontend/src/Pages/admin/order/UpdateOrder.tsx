@@ -16,7 +16,8 @@ const UpdateOrder = () => {
     const { data: fetchOneOrder, isSuccess: isSuccessOneOrder } = useFetchOneOrderQuery(id)
     const [onUpdateOrder] = useUpdateOrderMutation()
     const orderDetailState = useSelector((state: RootState) => state.orderDetailSlice.orderDetails)
-    // const orderState = useSelector((state: RootState) => state.orderSlice.orders)
+    console.log(orderDetailState);
+
     useEffect(() => {
         if (isSuccessOrderDetail) {
             dispatch(fetchListOrderDetailSlice(listOrderDetail))
@@ -136,7 +137,7 @@ const UpdateOrder = () => {
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-6 py-3">
-                                <span className="sr-only">Image</span>
+                                <span className="sr-only text-black">Image</span>
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Tên sản phẩm
@@ -159,23 +160,23 @@ const UpdateOrder = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orderDetailState?.map((orderDetail) => (
+                        {orderDetailState?.slice().reverse().map((orderDetail) => (
                             <tr
                                 key={orderDetail._id}
                                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                             >
                                 <td className="w-32 p-4">
                                     <img
-                                        src={orderDetail.productId.image}
+                                        src={orderDetail?.productId?.image}
                                         className="rounded-2xl object-cover w-[97px] h-[97px]"
                                         alt=""
                                     />
                                 </td>
                                 <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                    {orderDetail.productId.name}
+                                    {orderDetail?.productId.name}
                                 </td>
                                 <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                    {orderDetail.productId.price}
+                                    {orderDetail?.productId.price}
                                 </td>
                                 <td className="px-6 py-4 max-w-[350px] whitespace-nowrap overflow-hidden text-ellipsis">
                                     {orderDetail.quantity}

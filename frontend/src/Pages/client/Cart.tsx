@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom"
-import { useFetchCartByUserQuery, useFetchListCartQuery, useRemoveCartMutation } from '../../stores/toolkit/cart/cart.service'
+import { useFetchCartByUserQuery, useFetchListCartQuery, useRemoveCartMutation, useUpdateCartMutation } from '../../stores/toolkit/cart/cart.service'
 import { Dispatch } from 'redux'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../stores/toolkit'
-import { deleteCartSlice, listCartSlice } from '../../stores/toolkit/cart/cartSlice'
+import { deleteCartSlice, increCartSlice, listCartSlice } from '../../stores/toolkit/cart/cartSlice'
 import { useFetchListProductQuery, useFetchOneProductQuery } from '../../stores/toolkit/product/product.service'
 import { listProductSlice } from '../../stores/toolkit/product/productSlice'
 import { ICart } from '../../stores/toolkit/cart/cart.interface'
 const Cart = () => {
     const dispatch: Dispatch<any> = useDispatch()
     const cartState = useSelector((state: RootState) => state.cartSlice.carts)
-    console.log(cartState);
-
     const { data: listCart, isSuccess } = useFetchListCartQuery()
     const productState = useSelector((state: RootState) => state.productSlice.products)
     const { data: listProduct, isSuccess: isSuccessProduct } = useFetchListProductQuery()
     const [onRemove] = useRemoveCartMutation()
     const [carts, setCarts] = useState<ICart[]>([])
     const [totalMoney, setTotalMoney] = useState<number>(0)
+    const [onUpdateCart] = useUpdateCartMutation()
     const user = JSON.parse(localStorage.getItem("user")!)
     useEffect(() => {
         if (isSuccess && listCart) {
@@ -55,6 +54,21 @@ const Cart = () => {
         })
         setTotalMoney(total)
     }, [cartState])
+    const increBtn = async (id: string) => {
+        try {
+            if (id) {
+                dispatch(increCartSlice(id))
+            }
+            const cartStore = JSON.parse(localStorage.getItem("cart")!)
+            // gặp vấn đề về tăng số lượng cart 
+            if (cartStore) {
+                await onUpdateCart({ id, ...cartStore })
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
     return (
         <div className='container'>
             <h1 className="uppercase mt-11 text-lg">Giỏ hàng của bạn</h1>
@@ -72,7 +86,7 @@ const Cart = () => {
                     <div className='flex items-center justify-center min-h-[250px]'>
                         <h1 className='text-[18px]'>Hiện không có đơn hàng nào</h1>
                     </div>
-                    : <form className='flex flex-col'>
+                    : <div className='flex flex-col'>
                         {cartState ? cartState?.map((cart, index) => {
                             return <>
                                 {listProduct?.map((product, index) =>
@@ -101,6 +115,7 @@ const Cart = () => {
                                                     <button
                                                         type="button"
                                                         className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r"
+                                                        onClick={() => increBtn(cart._id!)}
                                                     >
                                                         +
                                                     </button>
@@ -136,7 +151,7 @@ const Cart = () => {
                             <span className="text-[16px] mr-3">Tổng tiền:</span>
                             <span className="text-main text-[20px] font-bold float-right">{totalMoney}đ</span>
                         </div>
-                    </form>
+                    </div>
                 }
 
                 {/* button */}

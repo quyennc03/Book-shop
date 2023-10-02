@@ -38,10 +38,19 @@ const cartApi = createApi({
             }),
             providesTags: ["cart"]
         }),
+        updateCart: builer.mutation({
+            query: ({ id, ...cart }) => ({
+                method: "PATCH",
+                url: "carts/" + id,
+                body: cart,
+
+            }),
+            invalidatesTags: ["cart"]
+        })
     })
 })
 
 
-export const { useAddCartMutation, useRemoveCartMutation, useFetchListCartQuery, useFetchOneCartQuery, useFetchCartByUserQuery } = cartApi
+export const { useAddCartMutation, useRemoveCartMutation, useFetchListCartQuery, useFetchOneCartQuery, useFetchCartByUserQuery, useUpdateCartMutation } = cartApi
 
 export default cartApi

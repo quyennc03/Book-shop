@@ -113,13 +113,13 @@ const ListProduct = () => {
                             {/* <th scope="col" className="px-6 py-3">
                                 description
                             </th> */}
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" colSpan={2} className="px-6 py-3 text-center">
                                 Action
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {productState?.map((product, index) => {
+                        {productState?.slice().reverse().map((product, index) => {
                             return <tr
                                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 key={index}
@@ -152,10 +152,12 @@ const ListProduct = () => {
                                 <td className="px-6 py-4">
                                     <Link
                                         to={`/admin/update-product/${product._id!}`}
-                                        className="px-4 py-2 font-medium text-white rounded-md bg-cyan-500 shadow-cyan-500/50"
+                                        className="px-4 py-2 font-medium items-center text-white rounded-md bg-cyan-500 shadow-cyan-500/50"
                                     >
                                         Edit
                                     </Link>
+                                </td>
+                                <td className='px-6 py-4'>
                                     <button
                                         onClick={() => deleteProduct(product._id!)}
                                         className="px-3 py-2 ml-3 font-medium text-white bg-red-500 rounded-md shadow-red-500/50"
