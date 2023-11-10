@@ -14,7 +14,8 @@ const cartSlice = createSlice({
         listCartSlice: (state: ICartState, action: PayloadAction<ICart[]>) => {
             const userLocal = JSON.parse(localStorage.getItem("user")!)
             if (userLocal) {
-                const cartByUser = action?.payload?.filter((cart) => cart.userId == userLocal._id)
+                const cartByUser = action?.payload?.filter((cart) => cart.userId === userLocal._id)
+                console.log(cartByUser);
                 state.carts = cartByUser
             } else {
                 state.carts = []
@@ -24,10 +25,8 @@ const cartSlice = createSlice({
         addCartSlice: (state: ICartState, action: PayloadAction<ICart>) => {
             const cartExistIndex = state.carts.findIndex((cart) => cart.productId === action.payload.productId);
             if (cartExistIndex !== -1) {
-                // Sản phẩm đã tồn tại trong giỏ hàng, tăng quantity
                 state.carts[cartExistIndex].quantity += action.payload.quantity;
             } else {
-                // Sản phẩm chưa tồn tại trong giỏ hàng, thêm vào giỏ hàng
                 state.carts = [
                     ...state.carts,
                     {
@@ -49,14 +48,22 @@ const cartSlice = createSlice({
         },
         increCartSlice: (state: ICartState, action: PayloadAction<string>) => {
             const cartIndex = state.carts.findIndex((cart) => cart._id === action.payload)
-            console.log(cartIndex);
-
             state.carts[cartIndex].quantity += 1
-            localStorage.setItem("cart", JSON.stringify(state.carts[cartIndex]))
+            localStorage.setItem("cartIndex", JSON.stringify(state.carts[cartIndex]))
+        },
+        decreCartSlice: (state: ICartState, action: PayloadAction<string>) => {
+            const cartIndex = state.carts.findIndex((cart) => cart._id === action.payload)
+            if (state.carts[cartIndex].quantity <= 1) {
+                state.carts[cartIndex].quantity == 1
+                localStorage.setItem("cartIndex", JSON.stringify(state.carts[cartIndex]))
+            } else {
+                state.carts[cartIndex].quantity -= 1
+                localStorage.setItem("cart", JSON.stringify(state.carts[cartIndex]))
+            }
         }
     })
 })
 
-export const { listCartSlice, addCartSlice, deleteCartSlice, increCartSlice } = cartSlice.actions
+export const { listCartSlice, addCartSlice, deleteCartSlice, increCartSlice, decreCartSlice } = cartSlice.actions
 
 export default cartSlice.reducer

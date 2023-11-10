@@ -55,6 +55,9 @@ const Checkout = () => {
                 await addOrder(order)
                 alert("Đặt hàng thành công!")
                 navigate("/billConfirm")
+            } else {
+                alert("Bạn cần phải đăng nhập!")
+                navigate("/signin")
             }
         } catch (error) {
             console.log(error);

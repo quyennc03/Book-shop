@@ -5,7 +5,7 @@ import { Dispatch } from 'redux'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../stores/toolkit'
-import { deleteCartSlice, increCartSlice, listCartSlice } from '../../stores/toolkit/cart/cartSlice'
+import { decreCartSlice, deleteCartSlice, increCartSlice, listCartSlice } from '../../stores/toolkit/cart/cartSlice'
 import { useFetchListProductQuery, useFetchOneProductQuery } from '../../stores/toolkit/product/product.service'
 import { listProductSlice } from '../../stores/toolkit/product/productSlice'
 import { ICart } from '../../stores/toolkit/cart/cart.interface'
@@ -22,17 +22,14 @@ const Cart = () => {
     const user = JSON.parse(localStorage.getItem("user")!)
     useEffect(() => {
         if (isSuccess && listCart) {
-            dispatch(listCartSlice(listCart))
+            const cartRelative = listCart.filter((cart) => cart.productId === cart.productId)
+            dispatch(listCartSlice(cartRelative))
         }
-
         if (isSuccessProduct) {
             dispatch(listProductSlice(listProduct))
         }
     }, [isSuccess, isSuccessProduct])
 
-    // useEffect(() => {
-    //     handleCartInfo()
-    // }, [cartState])
     const removeCart = async (id: string) => {
         try {
             if (id) {
@@ -59,10 +56,24 @@ const Cart = () => {
             if (id) {
                 dispatch(increCartSlice(id))
             }
-            const cartStore = JSON.parse(localStorage.getItem("cart")!)
+            const cartStore = JSON.parse(localStorage.getItem("cartIndex")!)
             // gặp vấn đề về tăng số lượng cart 
             if (cartStore) {
                 await onUpdateCart({ id, ...cartStore })
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+    const decreBtn = async (id: string) => {
+        try {
+            if (id) {
+                dispatch(decreCartSlice(id))
+            }
+            const cartStore = JSON.parse(localStorage.getItem("cartIndex")!)
+            if (cartStore) {
+                onUpdateCart({ id, ...cartStore })
             }
         } catch (error) {
             console.log(error);
@@ -93,7 +104,7 @@ const Cart = () => {
                                     product._id == cart.productId ?
                                         <>
                                             <div key={index} className="px-3 py-5 flex justify-between items-center border-gray-200">
-                                                <Link to={`/productDetail`}>
+                                                <Link to={`/productDetail/${cart.productId}`}>
                                                     <img src={product.image} className="w-[98px] h-[98px] shrink-0" />
                                                 </Link>
                                                 <div className='w-[350px]'>
@@ -104,6 +115,7 @@ const Cart = () => {
                                                     <button
                                                         type="button"
                                                         className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l"
+                                                        onClick={() => decreBtn(cart._id!)}
                                                     >
                                                         -
                                                     </button>

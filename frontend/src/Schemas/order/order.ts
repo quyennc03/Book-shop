@@ -5,7 +5,7 @@ export const orderSchema = yup.object({
     email: yup.string().email().required("Trường email là bắt buộc"),
     phoneNumber: yup.string().required("Trường số điện thoại là bắt buộc"),
     address: yup.string().required("Trường địa chỉ là bắt buộc"),
-    note: yup.string().required("Trường note là bắt buộc"),
+    note: yup.string(),
     totalMoney: yup.number().required("Thieu total money"),
     status: yup.number().required(),
     userId: yup.string()

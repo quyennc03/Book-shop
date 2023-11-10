@@ -129,8 +129,6 @@ const MyOrder = () => {
                                     >
                                         {OrderStatus(order.status)}
                                     </button>}
-
-
                                 </td>
                                 {/* { order.status == 1 && <td className="px-6 py-4 text-yellow-500">Hủy</td> } */}
                             </tr>

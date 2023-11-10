@@ -14,6 +14,8 @@ const Products = () => {
     const dispatch: Dispatch<any> = useDispatch()
     const { data: listCategory, isSuccess: isSuccessCategory, isLoading } = useFetchListCategoryQuery()
     const { data: listProduct, isSuccess } = useFetchListProductQuery()
+
+
     const [listProductCate, setListProductCate] = useState<string>(listProduct ? listProduct[0].categoryId : "")
     const categoryState = useSelector((state: RootState) => state.categorySlice.categories)
     const productState = useSelector((state: RootState) => state.productCategorySlice.products)

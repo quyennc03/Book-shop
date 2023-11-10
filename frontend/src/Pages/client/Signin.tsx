@@ -28,6 +28,8 @@ const Signin = () => {
     const onSignin = async (users: signinForm) => {
         try {
             const errorEmail = listUser?.find((userItem) => userItem.email == users.email)
+            console.log(listUser);
+
             if (!errorEmail) {
                 alert("Tai khoan hoac mat khau khong chinh xac")
             } else {

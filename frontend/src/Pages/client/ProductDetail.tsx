@@ -26,29 +26,36 @@ const ProductDetail = () => {
     const [quantity, setQuantiy] = useState<number>(1)
     const { data: listcomment, isSuccess: isSuccessFeedBack, isLoading, isError } = useListFeedBackQuery()
     const feedBackState = useSelector((state: RootState) => state.feedBackSlice.feedBacks)
-
     const { data: listCart, isSuccess } = useFetchListCartQuery()
+    const cartState = useSelector((state: RootState) => state.cartSlice.carts)
     const [addCart] = useAddCartMutation()
     const [addFeedBack] = useAddFeedBackMutation()
     const navigate = useNavigate()
     const userLocal = JSON.parse(localStorage.getItem("user")!)
+
     const addToCart = async (id: string) => {
         try {
             if (userLocal && id) {
-                await addCart({
-                    userId: userLocal?._id,
-                    productId: id,
-                    price: getOneProduct?.price * quantity,
-                    quantity: quantity,
-                }).then(() =>
-                    dispatch(addCartSlice({
+                const cartId = cartState?.filter((cart) =>
+                    cart.productId === getOneProduct?._id
+                )
+                if (cartId[0]?.quantity + quantity > getOneProduct?.quantity) {
+                    alert("Sản phẩm đã vượt quá số lượng tồn kho!")
+                } else {
+                    await addCart({
                         userId: userLocal?._id,
                         productId: id,
                         price: getOneProduct?.price * quantity,
                         quantity: quantity,
-                    })))
+                    }).then(() =>
+                        dispatch(addCartSlice({
+                            userId: userLocal?._id,
+                            productId: id,
+                            price: getOneProduct?.price * quantity,
+                            quantity: quantity,
+                        })))
+                }
             }
-
         } catch (error) {
             console.log(error);
         }

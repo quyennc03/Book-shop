@@ -9,12 +9,42 @@ export const create = async (req, res) => {
                 message: error.details[0].message,
             });
         }
-        const cart = await Cart.create(req.body);
-        if (!cart) {
-            return res.status(404).json({
-                message: "Order not found",
+        const cart = await Cart.findOne({ productDetailId: req.body.productDetailId })
+        if (cart) {
+            const newQuantity = cart.quantity + req.body.quantity
+            const newTotalMoney = cart.totalMoney + req.body.totalMoney
+            const newCart = await Cart.findOneAndUpdate(
+                { productDetailId: req.body.productDetailId },
+                { quantity: newQuantity, totalMoney: newTotalMoney },
+                { new: true }
+            );
+            if (!newCart) {
+                return res.status(404).json({
+                    message: "Cart not found",
+                });
+            }
+            return res.status(200).json({
+                message: "Cart created successfully",
+                data: newCart,
+            });
+        } else {
+            const cart = await Cart.create(req.body);
+            if (!cart) {
+                return res.status(404).json({
+                    message: "Cart not found",
+                });
+            }
+            return res.status(200).json({
+                message: "Cart created successfully",
+                data: cart,
             });
         }
+        // const cart = await Cart.create(req.body);
+        // if (!cart) {
+        //     return res.status(404).json({
+        //         message: "Order not found",
+        //     });
+        // }
         await User.findByIdAndUpdate(cart.userId, {
             $addToSet: {
                 carts: cart._id,
