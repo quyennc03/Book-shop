@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux'
 import { listCartSlice } from '../stores/toolkit/cart/cartSlice'
 import { useFetchListProductQuery, useGetProductByNameQuery } from '../stores/toolkit/product/product.service'
 import { listProductSearchSlice } from '../stores/toolkit/product/productSlice'
+import { useForm } from 'react-hook-form'
 const Header = () => {
     const navigate = useNavigate()
     const dispatch: Dispatch<any> = useDispatch()
@@ -29,14 +30,9 @@ const Header = () => {
     }, [isSuccess])
     const { data: listProduct } = useFetchListProductQuery()
     const [nameSearch, setSearch] = useState<string>("")
-    // const { data: listProductSearch, isSuccess: isSuccessSearch } = useGetProductByNameQuery(nameSearch)
-    // const productFilterState = useSelector((state: RootState) => state.productCategorySlice.products)
-    // useEffect(() => {
-    //     if (isSuccessSearch) {
-    //         dispatch(listProductSearchSlice(listProductSearch))
-    //     }
-    // }, [isSuccessSearch])
+    const { handleSubmit } = useForm()
     const searchButton = async () => {
+        // e.preventDefault()
         if (listProduct) {
             localStorage.setItem("nameSearch", JSON.stringify(nameSearch))
             await dispatch(listProductSearchSlice({ searchTerm: nameSearch, products: listProduct }))
@@ -53,18 +49,18 @@ const Header = () => {
                 <Link to="/" className='h-[52px]'>
                     <img className='h-full object-cover' src="../../public/images/logo.png" alt="" />
                 </Link>
-                <form className='flex flex-1 items-center px-3 py-2 h-[50px]'>
+                <form onSubmit={handleSubmit(searchButton)} className='flex flex-1 items-center px-3 py-2 h-[50px]'>
                     <div className="bg-main h-full items-center flex px-2 mr-3">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" className="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
                     </div>
                     <input onChange={(e) => setSearch(e.target.value)} type="text" className='w-[500px] border focus:outline-none  h-full focus:border-main focus:ring-main px-2' placeholder='Hãy tìm sản phẩm ...' />
-                    <div onClick={searchButton} className="bg-main h-full items-center flex px-4 mr-3">
+                    <button type='submit' className="bg-main h-full items-center flex px-4 mr-3">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" className="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
-                    </div>
+                    </button>
                 </form>
                 <Link to="/cart" className="flex items-center mr-2 relative">
                     <div className="mr-1">
